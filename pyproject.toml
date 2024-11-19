@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "superset-embedding-proxy"
+version = "0.1.0"
+description = ""
+authors = ["antkey1"]
+readme = "README.md"
+packages = [{include = "superset_embedding_proxy"}]
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.13"
+fastapi = "^0.115.5"
+superset-python-client = "^1.1.2"
+uvicorn = "^0.32.0"
+pydantic-settings = "^2.6.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,10 @@
+services:
+  api:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      SUPERSET_EMBEDDING_PROXY_SUPERSET_HOST: http://superset.example.com
+      SUPERSET_EMBEDDING_PROXY_SUPERSET_USERNAME: embedder
+      SUPERSET_EMBEDDING_PROXY_SUPERSET_PASSWORD: changeme

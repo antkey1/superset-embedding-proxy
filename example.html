@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+
+<body>
+  <h1>This is example!</h1>
+  <script src="https://unpkg.com/@superset-ui/embedded-sdk"></script>
+  <div id="my-superset-container"></div>
+  <script>
+    const SUPERSET_URL = 'https://superset.example.com';  // Superset URL
+    const SUPERSET_EMBEDDING_PROXY_URL = 'http://localhost:8000/superset/guest-token'; // superset-embedding-proxy URL
+    const DASHBOARD_ID = "699727c8-bbfd-426e-ad6f-5f3d487c0167"; // Embedding ID from superset
+
+    async function fetchGuestTokenFromBackend() {
+      try {
+        const response = await fetch(
+          SUPERSET_EMBEDDING_PROXY_URL,
+          {
+            method: 'post',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              resource_id: DASHBOARD_ID,
+            })
+          }
+        )
+
+        if (!response.ok) {
+          throw new Error(`Error! status: ${response.status}`);
+        }
+
+        const responseJson = await response.json();
+        return responseJson.token
+      } catch (error) {
+        console.log('guest token fetch error: ' + error.message)
+      }
+    }
+
+    supersetEmbeddedSdk.embedDashboard({
+      debug: true,
+      id: DASHBOARD_ID,
+      supersetDomain: SUPERSET_URL,
+      mountPoint: document.getElementById("my-superset-container"),
+      fetchGuestToken: () => fetchGuestTokenFromBackend(),
+      dashboardUiConfig: {
+        hideTitle: true,
+        hideTab: true,
+        hideChartControls: true,
+        urlParams: {
+          standalone: 1,
+        }
+      },
+      iframeSandboxExtras: [
+        'allow-top-navigation',
+        'allow-popups-to-escape-sandbox'
+      ]
+    });
+
+    // Зададим размеры фрейма
+    document.getElementById("my-superset-container").children[0].width = '100%'
+    document.getElementById("my-superset-container").children[0].height = '500px'
+  </script>
+</body>
+
+</html>
